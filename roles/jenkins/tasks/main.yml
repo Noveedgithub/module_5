@@ -1,0 +1,28 @@
+---
+# tasks file for jenkins
+- name: install java
+  package:
+    name:
+      - openjdk-17-jre
+      - wget
+    state: present
+    update_cache: yes
+
+- name: download jenkins repo key
+  get_url:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    dest: /usr/share/keyrings/jenkins-keyring.asc
+- name: add jenkins repo
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
+    state: present
+    filename: jenkins
+- name: install jenkins
+  apt:
+    name: jenkins
+    state: present
+- name: start and enable jenkins
+  service:
+    name: jenkins
+    state: started
+    enabled: yes

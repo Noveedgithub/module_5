@@ -1,0 +1,46 @@
+---
+# tasks file for docker
+- name: Prerequisites for Docker repo
+  become: on
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: latest
+    update_cache: true
+- name: Add docker GPG key
+  become: on
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+- name: Add docker repo
+  become: on
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+- name: install docker CE
+  become: on
+  apt:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    update_cache: yes
+- name: Install prerequisites for docker-compose
+  become: on
+  apt:
+      name:
+        - python3-pip
+        - python3-setuptools
+        - virtualenv
+
+- name: Install docker-compose
+  become: on
+  apt:
+      name: docker-compose
+      state: present
+
+- name: Ensure Docker is started
+  service:
+      name: docker
+      state: started

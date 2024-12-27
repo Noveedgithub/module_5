@@ -1,0 +1,60 @@
+- name: Installation
+  hosts: wsl_ubuntu
+  tasks:
+    - name: Install nginx
+      become: true
+      apt:
+        name: nginx
+        state: absent
+        update_cache: true
+      when: ansible_host == "172.29.5.137"
+
+- name: Install Docker
+  hosts: wsl_ubuntu
+  become: yes
+  roles:
+    - docker
+
+- name: Install Jenkins
+  hosts: wsl_ubuntu
+  become: yes
+  roles:
+    - jenkins
+
+- name: Ensure the Docker group exists
+  hosts: wsl_ubuntu
+  become: yes
+  tasks:
+    - name: Create Docker group
+      group:
+        name: docker
+        state: present
+
+- name: Add Jenkins user to Docker group
+  hosts: wsl_ubuntu
+  become: yes
+  tasks:
+    - name: Add Jenkins to Docker group
+      user:
+        name: jenkins
+        group: docker
+        append: yes
+
+- name: Ensure the Jenkins group exists
+  hosts: wsl_ubuntu
+  become: yes
+  tasks:
+    - name: Create Jenkins group
+      group:
+        name: jenkins
+        state: present
+
+- name: Add Docker user to Jenkins group
+  hosts: wsl_ubuntu
+  become: yes
+  tasks:
+    - name: Add Docker to Jenkins group
+      user:
+        name: docker
+        group: jenkins
+        append: yes
