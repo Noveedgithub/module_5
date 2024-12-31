@@ -51,14 +51,4 @@
         name: docker
         state: restarted
       notify: restart docker
-
-  # handlers:
-  #   - name: restart Jenkins
-  #     ansible.builtin.service:
-  #       name: jenkins
-  #       state: restarted
-
-    # - name: restart docker
-    #   ansible.builtin.service:
-    #     name: docker
-    #     state: restarted
+      
