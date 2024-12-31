@@ -20,7 +20,3 @@ output "kube_config" {
 
   sensitive = true
 }
-
-# output "key_data" {
-#   value = azurerm_ssh_public_key.ssh_key.public_key
-# }
