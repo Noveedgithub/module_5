@@ -15,7 +15,7 @@ resource "azurerm_kubernetes_cluster" "module5_aks" {
   }
 }
 
-resource "kubernetes_namespace" "Jenkins" {
+resource "kubernetes_namespace" "jenkins" {
   metadata {
     name = "jenkins"
     labels = {
