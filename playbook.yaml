@@ -1,60 +1,64 @@
-- name: Installation
+- name: Installation and Configuration
   hosts: wsl_ubuntu
+  become: true
+
   tasks:
     - name: Install nginx
-      become: true
       apt:
         name: nginx
         state: absent
         update_cache: true
       when: ansible_host == "172.29.5.137"
 
-- name: Install Docker
-  hosts: wsl_ubuntu
-  become: yes
-  roles:
-    - docker
+    - name: Install Docker
+      include_role:
+        name: docker
 
-- name: Install Jenkins
-  hosts: wsl_ubuntu
-  become: yes
-  roles:
-    - jenkins
+    - name: Install Jenkins
+      include_role:
+        name: jenkins
 
-- name: Ensure the Docker group exists
-  hosts: wsl_ubuntu
-  become: yes
-  tasks:
-    - name: Create Docker group
+    - name: Ensure the Docker group exists
       group:
         name: docker
         state: present
 
-- name: Add Jenkins user to Docker group
-  hosts: wsl_ubuntu
-  become: yes
-  tasks:
-    - name: Add Jenkins to Docker group
+    - name: Add Jenkins user to Docker group
       user:
         name: jenkins
         group: docker
         append: yes
 
-- name: Ensure the Jenkins group exists
-  hosts: wsl_ubuntu
-  become: yes
-  tasks:
-    - name: Create Jenkins group
+    - name: Ensure the Jenkins group exists
       group:
         name: jenkins
         state: present
 
-- name: Add Docker user to Jenkins group
-  hosts: wsl_ubuntu
-  become: yes
-  tasks:
-    - name: Add Docker to Jenkins group
+    - name: Add Docker user to Jenkins group
       user:
         name: docker
         group: jenkins
         append: yes
+
+    - name: Restart Jenkins service
+      ansible.builtin.service:
+        name: jenkins
+        state: restarted
+      notify: restart Jenkins
+
+    - name: Restart Docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted
+      notify: restart docker
+
+  # handlers:
+  #   - name: restart Jenkins
+  #     ansible.builtin.service:
+  #       name: jenkins
+  #       state: restarted
+
+    # - name: restart docker
+    #   ansible.builtin.service:
+    #     name: docker
+    #     state: restarted
