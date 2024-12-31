@@ -3,13 +3,6 @@
   become: true
 
   tasks:
-    - name: Install nginx
-      apt:
-        name: nginx
-        state: absent
-        update_cache: true
-      when: ansible_host == "172.29.5.137"
-
     - name: Install Docker
       include_role:
         name: docker
