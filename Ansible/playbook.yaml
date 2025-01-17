@@ -12,22 +12,26 @@
         name: jenkins
 
     - name: Ensure the Docker group exists
+      become: on
       group:
         name: docker
         state: present
 
     - name: Add Jenkins user to Docker group
+      become: on
       user:
         name: jenkins
         group: docker
         append: yes
 
     - name: Ensure the Jenkins group exists
+      become: on
       group:
         name: jenkins
         state: present
 
     - name: Add Docker user to Jenkins group
+      become: on
       user:
         name: docker
         group: jenkins
