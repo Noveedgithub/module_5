@@ -38,12 +38,14 @@
         append: yes
 
     - name: Restart Jenkins service
+      become: on
       ansible.builtin.service:
         name: jenkins
         state: restarted
       notify: restart Jenkins
 
     - name: Restart Docker
+      become: on
       ansible.builtin.service:
         name: docker
         state: restarted
